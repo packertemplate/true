@@ -1,0 +1,34 @@
+{
+  "builders": [
+    {
+      "type": "docker",
+      "name": "alpine",
+      "image": "alpine-nasm",
+      "run_command": ["-d", "-i", "-t", "{{.Image}}", "/bin/sh", "-l"],
+      "pull": false,
+      "discard": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "true.asm",
+      "destination": "true.asm"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "nasm -o true true.asm",
+        "chmod +x true",
+        "tar cf true.tar true",
+        "sleep 5"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "true.tar",
+      "destination": "true.tar",
+      "direction": "download"
+    }
+  ]
+}
